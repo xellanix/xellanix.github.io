@@ -1,0 +1,90 @@
+main {
+    display: flex;
+    gap: var(--content-gap);
+    flex-direction: column;
+}
+
+section {
+    display: flex;
+}
+section.horizontal-layout {
+    flex-direction: row;
+}
+section.vertical-layout {
+    flex-direction: column;
+}
+section.use-space-between {
+    justify-content: space-between;
+}
+
+h1 {
+    font-size: var(--h1-font-size);
+    font-weight: 700;
+    margin: 0px;
+}
+h2 {
+    font-size: var(--h2-font-size);
+    font-weight: 700;
+    margin: 0px;
+}
+h6 {
+    font-size: var(--h6-font-size);
+    font-weight: 500;
+    margin: 0px;
+}
+p {
+    font-size: var(--p-font-size);
+    margin: 0px;
+    line-height: 1.3;
+}
+
+img {
+    object-fit: contain;
+}
+
+.accent-button {
+    display: flex;
+    align-self: flex-start;
+    background-color: var(--accent-color);
+    color: #E6E6E6;
+    border-radius: 16px;
+    padding: 20px 28px;
+    font-size: var(--accent-button-font-size);
+    font-weight: 600;
+
+    transition: background-color 87ms ease-out;
+}
+.accent-button:hover {
+    background-color: var(--accent-color-hover);
+    box-shadow: 0px 0px 42px 0px rgba(0, 0, 0, .09);
+}
+.accent-button > a {
+    color: #E6E6E6;
+    text-decoration: none !important;
+}
+
+#hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: center;
+    max-width: 45%;
+}
+#hero-content > div {
+    margin-top: 40px;
+}
+#hero-content > img {
+    display: none;
+}
+#hero-content + img {
+    height: 475.13px;
+}
+
+#home-section {
+    margin-top: calc(var(--content-gap) * -1);
+    padding-top: var(--content-gap);
+}
+#more-about-xellanix {
+    text-align: center;
+    gap: 24px;
+}
