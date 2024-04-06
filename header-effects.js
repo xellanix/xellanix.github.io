@@ -20,43 +20,66 @@ $('nav').ready(function(e) {
 });
 
 function changeSelectedNavItem() {
-    function getLastVisibleSection() {
+    function getLastVisibleSection(scrollDirection = 0) {
         let lastVisibleSection = null;
         let lastVisibleSectionTop = 0;
-
-        $("main > section[data-insert-to-navbar-menu]").each(function() {
+    
+        $("main > section[data-affect-to-navbar-menu]").each(function() {
             const section = this;
-
-            const rect = section.getBoundingClientRect();
-            const isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
-            
-            if (isVisible && (rect.top >= lastVisibleSectionTop || lastVisibleSection === null)) {
-                lastVisibleSectionTop = rect.top;
-                lastVisibleSection = section;
+    
+            function getByDirection(topr, bottomr) {
+                const sectionHeight = bottomr - topr;
+                const minVisibleHeight = $(section).data('affect-to-navbar-menu') === 'products-section' ? .5 : .3;
+                const visibleThreshold = sectionHeight * minVisibleHeight;
+                
+                //(topr >= 0 && bottomr - visibleThreshold <= window.innerHeight)
+                const isVisible = (topr + visibleThreshold <= window.innerHeight && bottomr >= visibleThreshold);
+                
+                if (isVisible && (topr >= lastVisibleSectionTop || lastVisibleSection === null)) {
+                    lastVisibleSectionTop = topr;
+                    lastVisibleSection = section;
+                }
             }
+            
+            const rect = section.getBoundingClientRect();
+            getByDirection(rect.top, rect.bottom);
+            if (scrollDirection === 0) getByDirection(rect.top, rect.bottom);
+            if (scrollDirection === 1) getByDirection(rect.bottom, rect.top);
         });
-
+    
         return lastVisibleSection;
     }
-
-    function setStyleToNavBarItem() {
-        const lastVisibleSection = getLastVisibleSection();
+    
+    function setStyleToNavBarItem(scrollDirection = 0) {
+        const lastVisibleSection = getLastVisibleSection(scrollDirection);
         
         if (lastVisibleSection) {
-            const id = lastVisibleSection.getAttribute('id');
+            const id = $(lastVisibleSection).data('affect-to-navbar-menu');
             $(`.nav-item-wrapper`).removeClass('active');
             $(`.nav-item-wrapper.${id}-class`).addClass('active');
         }
     }
 
+    let lastScrollTop = 0;
+
     $(window).ready(setStyleToNavBarItem);
-    $(window).on('scroll', setStyleToNavBarItem);
+    $(window).scroll(function(e) {
+        const st = $(this).scrollTop();
+        if (st > lastScrollTop){
+            // downscroll code
+            setStyleToNavBarItem(0);
+        } else {
+            // upscroll code
+            setStyleToNavBarItem(1);
+        }
+        lastScrollTop = st;
+    });
 }
 changeSelectedNavItem();
 
 $('#hamburger-button-lottie').on('click', function() {
     $('header').toggleClass('hambar-opened');
-    $('body').toggleClass('no-scroll');
+    $('html').toggleClass('no-scroll');
 });
 
 $('.nav-item-wrapper > a').on('click', function() {
