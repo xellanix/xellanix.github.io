@@ -28,6 +28,9 @@ header.on-stick {
 header.hambar-opened {
     border-radius: 0px;
 }
+header * {
+    user-select: none;
+}
 
 .icon-landscape {
     display: flex;
