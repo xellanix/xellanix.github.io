@@ -14,6 +14,7 @@ export default function NavItem(props) {
 
 	return (
 		<div className={`nav-item-wrapper ${id}-section-class`}>
+			<div className="nav-item-indicator"></div>
 			<a href={`#${id}-section`} onClick={handleClick}>
 				{itemName}
 			</a>

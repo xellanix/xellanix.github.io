@@ -162,12 +162,26 @@
         box-shadow: initial;
     }
     .hambar-opened > nav > .nav-item-wrapper.active {
+        --navigation-padding-horizontal-active: calc(var(--navigation-padding-horizontal) * 1.5);
+
         border-bottom: initial;
-        border-left: 3px solid var(--accent-color);
         height: 60%;
+        
+        position: relative;
+        align-items: center;
+    }
+    .hambar-opened > nav > .nav-item-wrapper.active > .nav-item-indicator {
+        display: initial;
+        height: 50%;
+        margin-left: calc(calc(var(--navigation-padding-horizontal-active) - 3px) / 2);
+        width: 3px;
+        border-radius: 16px;
+        background-color: var(--accent-color);
+        position: absolute;
     }
     .hambar-opened > nav > .nav-item-wrapper.active > a {
         background-color: var(--secondary-background-color);
+        padding: var(--navigation-padding-vertical) var(--navigation-padding-horizontal-active);
     }
 
     .hamburger-button {
@@ -204,6 +218,18 @@
 
     body > .body-wrapper {
         padding: 0px 48px;
+    }
+    
+    header {
+        margin-left: -48px;
+        padding-left: 48px;
+        margin-right: -48px;
+        padding-right: 48px;
+    }
+    header.hambar-opened > nav {
+        margin-left: -48px;
+        padding: 12px;
+        box-sizing: border-box;
     }
     
     header.on-stick {

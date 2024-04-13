@@ -99,6 +99,7 @@ export default class Header extends React.Component {
 		this.state = {
 			isSticky: false,
 			isHambarOpened: false,
+			isCollapsed: true,
 			navItems: null,
 		};
 		this.ref = React.createRef();
@@ -115,14 +116,26 @@ export default class Header extends React.Component {
 
 		window
 			.matchMedia("(max-width: 820px)")
-			.addEventListener("change", (e) =>
+			.addEventListener("change", (e) => {
+				const isNeedToClose = this.state.isHambarOpened;
+
 				this.setState(
 					(prevState) => ({
+						isCollapsed: e.matches,
 						isHambarOpened: prevState.isHambarOpened && e.matches,
 					}),
-					this.isHambarOpenedChanged
-				)
-			);
+					() => {
+						this.isHambarOpenedChanged();
+
+						if (isNeedToClose)
+							document
+								.querySelector(
+									"#hamburger-button-lottie #animation"
+								)
+								.click();
+					}
+				);
+			});
 
 		changeSelectedNavItem();
 	}
@@ -134,12 +147,15 @@ export default class Header extends React.Component {
 	}
 
 	handleClick = () => {
-		this.setState(
-			(prevState) => ({
-				isHambarOpened: !prevState.isHambarOpened,
-			}),
-			this.isHambarOpenedChanged
-		);
+		const { isCollapsed } = this.state;
+
+		if (isCollapsed)
+			this.setState(
+				(prevState) => ({
+					isHambarOpened: !prevState.isHambarOpened,
+				}),
+				this.isHambarOpenedChanged
+			);
 	};
 
 	isHambarOpenedChanged = () => {
