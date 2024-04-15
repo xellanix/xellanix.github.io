@@ -4,7 +4,6 @@
     background-color: var(--accent-color);
     color: #E6E6E6;
     border-radius: 16px;
-    padding: 20px 28px;
     font-size: var(--accent-button-font-size);
     font-weight: 600;
 
@@ -17,4 +16,5 @@
 .accent-button > a {
     color: #E6E6E6;
     text-decoration: none !important;
+    padding: 20px 28px;
 }

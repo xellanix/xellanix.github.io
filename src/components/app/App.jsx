@@ -40,7 +40,10 @@ export default function App() {
 							src={homeVisual}
 							alt="Fast, Simple, and Neat Coding Package Illustration"
 						/>
-						<AccentButton isTabStop={false}>
+						<AccentButton
+							isTabStop={false}
+							href="#products-section"
+						>
 							Get Started
 						</AccentButton>
 					</div>
