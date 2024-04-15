@@ -119,12 +119,12 @@ export default function App() {
 					<h2>Explore All the Works You've Never Imagined Before</h2>
 					<div className="horizontal-layout vertical-layout-center-align">
 						{GetProductItems()?.map(
-							({ title, description, laernLink }) => (
+							({ title, description, learnLink }) => (
 								<ProductItem
 									key={uuidv4()}
 									title={title}
 									description={description}
-									laernLink={laernLink}
+									learnLink={learnLink}
 								/>
 							)
 						)}
@@ -224,8 +224,8 @@ export default function App() {
 						<ServiceSection
 							title="Product"
 							items={GetProductItems()?.map(
-								({ title, laernLink }) => {
-									return { content: title, link: laernLink };
+								({ title, learnLink }) => {
+									return { content: title, link: learnLink };
 								}
 							)}
 						></ServiceSection>
