@@ -1,8 +1,8 @@
-import "./accent-button.css";
+import "./button.css";
 
 export default function AccentButton(props) {
 	return (
-		<div className="accent-button">
+		<div className="button accent" id={props.id}>
 			<a
 				href={props.href}
 				target={props.target}
