@@ -27,3 +27,17 @@ export function toCapitalizeEachWord(
 		})
 		.join(joinDelimiter);
 }
+
+export function Splitter(string = "", { type = "char" }) {
+	if (type === "char") {
+		const result = string.split("");
+		const length = result.length;
+
+		return [result, length];
+	} else if (type === "word") {
+		const result = string.split("");
+		const length = result.length;
+
+		return [result, length];
+	} else return [[string], 1];
+}
