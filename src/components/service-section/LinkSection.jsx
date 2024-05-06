@@ -32,6 +32,7 @@ export default class LinkSection extends React.Component {
 							key={uuidv4()}
 							href={`#${GetSubSectionID(item)}-section`}
 							target="_blank"
+							tabIndex="-1"
 						>
 							{GetSectionName(item)}
 						</a>

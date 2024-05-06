@@ -5,7 +5,7 @@ export default function ServiceSection({ title, items, children }) {
 		<div className="vertical-layout">
 			<h4>{title}</h4>
 			{items?.map(({ content, link }) => (
-				<a key={uuidv4()} href={link} target="_blank">
+				<a key={uuidv4()} href={link} target="_blank" tabIndex="-1">
 					{content}
 				</a>
 			))}
