@@ -1,12 +1,21 @@
-export default function NavItemSection(props) {
+import { m } from "framer-motion";
+
+export default function NavItemSection({
+	layout,
+	additionalClass,
+	sectionName,
+	children,
+	...otherProps
+}) {
 	return (
-		<section
-			className={`${props.layout}-layout ${props.additionalClass}`}
-			id={`${props.sectionName}-section`}
+		<m.section
+			className={`${layout}-layout ${additionalClass}`}
+			id={`${sectionName}-section`}
 			data-insert-to-navbar-menu
-			data-affect-to-navbar-menu={`${props.sectionName}-section`}
+			data-affect-to-navbar-menu={`${sectionName}-section`}
+			{...otherProps}
 		>
-			{props.children}
-		</section>
+			{children}
+		</m.section>
 	);
 }
