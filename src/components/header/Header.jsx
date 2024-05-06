@@ -1,9 +1,11 @@
-import React from "react";
-import icon from "../../assets/icon.svg";
+import React, { useState, useRef, useEffect } from "react";
 import Hamburger from "./Hamburger.jsx";
 import NavItem from "../nav-item/NavItem.jsx";
 import { GetAllSectionID } from "../nav-item-section/SectionCollector.jsx";
 import { v4 as uuidv4 } from "uuid";
+import { useLenis } from "lenis/react";
+
+import icon from "../../assets/icon.svg";
 import "./Header.css";
 import "./nav-styles.css";
 
@@ -21,7 +23,7 @@ function changeSelectedNavItem() {
 						section.dataset.affectToNavbarMenu ===
 						"products-section"
 							? 0.5
-							: 0.3;
+							: 0.4;
 					const visibleThreshold = sectionHeight * minVisibleHeight;
 
 					//(topr >= 0 && bottomr - visibleThreshold <= window.innerHeight)
@@ -93,112 +95,83 @@ function changeSelectedNavItem() {
 	});
 }
 
-export default class Header extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isSticky: false,
-			isHambarOpened: false,
-			isCollapsed: true,
-			navItems: null,
-		};
-		this.ref = React.createRef();
-	}
+export default function Header({ isCollapsed, children }) {
+	const [isSticky, setIsSticky] = useState(false);
+	const [isHambarOpened, setIsHambarOpened] = useState(false);
+	const [navItems, setNavItems] = useState(null);
+	const ref = useRef();
 
-	componentDidMount() {
+	useEffect(() => {
 		const observer = new IntersectionObserver(([entry]) => {
-			this.setState({ isSticky: !entry.isIntersecting });
+			setIsSticky(!entry.isIntersecting);
 		});
-		observer.observe(this.ref.current);
-		this.observer = observer;
+		observer.observe(ref.current);
 
-		this.setState({ navItems: GetAllSectionID() });
+		setNavItems(GetAllSectionID());
 
 		window
 			.matchMedia("(max-width: 820px)")
 			.addEventListener("change", (e) => {
-				const isNeedToClose = this.state.isHambarOpened;
+				if (isHambarOpened)
+					document
+						.querySelector("#hamburger-button-lottie #animation")
+						.click();
 
-				this.setState(
-					(prevState) => ({
-						isCollapsed: e.matches,
-						isHambarOpened: prevState.isHambarOpened && e.matches,
-					}),
-					() => {
-						this.isHambarOpenedChanged();
-
-						if (isNeedToClose)
-							document
-								.querySelector(
-									"#hamburger-button-lottie #animation"
-								)
-								.click();
-					}
-				);
+				setIsHambarOpened(isHambarOpened && e.matches);
 			});
 
 		changeSelectedNavItem();
-	}
 
-	componentWillUnmount() {
-		if (this.observer) {
-			this.observer.disconnect();
+		return () => {
+			observer?.disconnect();
+		};
+	}, []);
+
+	function handleClick() {
+		if (isCollapsed) {
+			setIsHambarOpened(!isHambarOpened);
 		}
 	}
 
-	handleClick = () => {
-		const { isCollapsed } = this.state;
+	useLenis(
+		(lenis) => {
+			if (isHambarOpened) {
+				document.querySelector("html").classList.add("no-scroll");
+				lenis.stop();
+			} else {
+				document.querySelector("html").classList.remove("no-scroll");
+				lenis.start();
+			}
+		},
+		[isHambarOpened]
+	);
 
-		if (isCollapsed)
-			this.setState(
-				(prevState) => ({
-					isHambarOpened: !prevState.isHambarOpened,
-				}),
-				this.isHambarOpenedChanged
-			);
-	};
-
-	isHambarOpenedChanged = () => {
-		const { isHambarOpened } = this.state;
-
-		if (isHambarOpened)
-			document.querySelector("html").classList.add("no-scroll");
-		else document.querySelector("html").classList.remove("no-scroll");
-	};
-
-	render() {
-		const { isSticky, isHambarOpened, navItems } = this.state;
-
-		return (
-			<>
-				<div
-					ref={this.ref}
-					id="header-stick-watcher"
-					data-scroll-watcher
-				></div>
-				<header
-					className={`${isSticky ? "on-stick" : ""} ${
-						isHambarOpened ? "hambar-opened" : ""
-					}`}
-				>
-					<div className="icon-landscape">
-						<a href="" tabIndex="-1">
-							<img src={icon} alt="Xellanix Icon" />
-							<div>Xellanix</div>
-						</a>
-					</div>
-					<nav>
-						{navItems?.map((item) => (
-							<NavItem
-								key={uuidv4()}
-								sectionName={item}
-								isUsingHambar={isHambarOpened}
-							/>
-						))}
-					</nav>
-					<Hamburger hambarClick={this.handleClick} />
-				</header>
-			</>
-		);
-	}
+	return (
+		<>
+			<div ref={ref} id="header-stick-watcher" data-scroll-watcher></div>
+			<header
+				className={`${isSticky ? "on-stick" : ""} ${
+					isHambarOpened ? "hambar-opened" : ""
+				}`}
+			>
+				<div className="icon-landscape">
+					<a href="" tabIndex="-1">
+						<img src={icon} alt="Xellanix Icon" />
+						<div>Xellanix</div>
+					</a>
+				</div>
+				<nav data-lenis-prevent>
+					{navItems?.map((item) => (
+						<NavItem
+							key={uuidv4()}
+							sectionName={item}
+							isUsingHambar={isHambarOpened}
+						/>
+					))}
+				</nav>
+				{children}
+				{isCollapsed && <Hamburger hambarClick={handleClick} />}
+			</header>
+		</>
+	);
 }
