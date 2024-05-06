@@ -13,10 +13,14 @@ html {
     --ternary-background-color2: #D6D6D6;
 
     --text-color: #303030;
+    --accent-button-text-color: #E6E6E6;
 
     --accent-color: #1973C1;
     --accent-color-hover: #268de8;
     --accent-color-active: #0162b7;
+
+    --error-color: #e81e1e;
+    --success-color: #59a310;
 
     color-scheme: light;
 }
@@ -30,10 +34,14 @@ html {
     --ternary-background-color2: #292929;
 
     --text-color: #E6E6E6;
+    --accent-button-text-color: #303030;
 
     --accent-color: #4DC3FF;
     --accent-color-hover: #76d1ff;
     --accent-color-active: #35aae5;
+
+    --error-color: #ff6060;
+    --success-color: #59a310;
 
     color-scheme: dark;
 }
@@ -41,30 +49,39 @@ html {
 body {
     --content-max-width: 1400px;
     --content-gap: clamp(80px, calc(100dvh * 0.168421053), 160px);
+
     --icon-gap: 16px;
     --icon-height: 48px;
     --icon-text-size: 36px;
     --icon-text-weight: 700;
+    
     --navigation-gap: 32px;
     --navigation-root-padding-vertical: 32px;
     --navigation-text-size: 20px;
     --navigation-padding-horizontal: 16px;
     --navigation-padding-vertical: 12px;
+    
     --h1-font-size: 48px;
     --h2-font-size: 36px;
     --h3-font-size: 28px;
     --h4-font-size: 24px;
     --h6-font-size: 32px;
     --p-font-size: 16px;
+    
     --section-gap-vertical: 24px;
+    --section-gap-vertical2x: calc(var(--section-gap-vertical) * 2);
     --section-gap-horizontal: 64px;
-    --accent-button-font-size: 24px;
+    
+    --button-font-size: 24px;
+    --button-padding-vertical: 16px;
+    --button-padding-horizontal: 24px;
+    --button-border-radius: 12px;
 
     --color-theme-duration: .333s;
     
     font-family: 'Figtree', sans-serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: min(16px, var(--button-font-size));
     word-wrap: break-word;
     transition: background-color ease-out, color ease-out;
     transition-duration: var(--color-theme-duration);
@@ -86,9 +103,143 @@ body > .body-wrapper {
     flex: 1 1 0;
     flex-direction: column;
     gap: var(--content-gap);
-    margin-bottom: calc(var(--navigation-root-padding-vertical) * 2);
+    padding-bottom: calc(var(--navigation-root-padding-vertical) * 2);
+}
+
+main {
+    display: flex;
+    gap: var(--content-gap);
+    flex-direction: column;
+}
+
+section {
+    display: flex;
+}
+
+h1 {
+    font-size: var(--h1-font-size);
+    font-weight: 700;
+    margin: 0px;
+}
+h2 {
+    font-size: var(--h2-font-size);
+    font-weight: 700;
+    margin: 0px;
+}
+h3 {
+    font-size: var(--h3-font-size);
+    font-weight: 700;
+    margin: 0px;
+}
+h4 {
+    font-size: var(--h4-font-size);
+    font-weight: 700;
+    margin: 0px;
+}
+h5 {
+    font-size: var(--h5-font-size);
+    font-weight: 600;
+    margin: 0px;
+}
+h6 {
+    font-size: var(--h6-font-size);
+    font-weight: 500;
+    margin: 0px;
+}
+p {
+    font-size: var(--p-font-size);
+    margin: 0px;
+    line-height: 1.3;
+}
+p > br {
+    display: block;
+    content: "";
+    margin-top: 0.5em;
+}
+
+img {
+    object-fit: contain;
+}
+
+label {
+	font-size: var(--h5-font-size);
+	font-weight: 600;
+	margin: 0px;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+input {
+	font: inherit;
+    color: inherit;
+}
+input[type="email"],
+input[type="password"], input[type="text"] {
+	padding: 16px;
+	border: 2px solid var(--ternary-background-color2);
+	border-radius: var(--button-border-radius);
+	background-color: var(--primary-background-color);
+}
+input[type="email"] ~ span,
+input[type="password"] ~ span,
+input[type="text"] ~ span {
+	display: none;
+}
+input[type="email"]:invalid ~ span,
+input[type="password"]:invalid ~ span,
+input[type="text"]:invalid ~ span {
+	display: initial;
 }
 
 .no-scroll {
     overflow: hidden;
+}
+.hide-all {
+    overflow: hidden;
+}
+
+#smoke-layer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    visibility: hidden;
+
+    display: flex;
+
+    transition: visibility, background-color, -webkit-backdrop-filter, backdrop-filter;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+}
+.no-scroll #smoke-layer {
+    visibility: visible;
+}
+.hide-all #smoke-layer {
+    visibility: visible;
+    z-index: 101;
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    #smoke-layer {
+        background-color: rgba(0, 0, 0, 0);
+        -webkit-backdrop-filter: blur(0px);
+        backdrop-filter: blur(0px);
+    }
+    .no-scroll #smoke-layer {
+        background-color: rgba(0, 0, 0, .35);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+    .hide-all #smoke-layer {
+        background-color: rgba(0, 0, 0, .35);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+}
+/* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
+@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    #smoke-layer {
+        background-color: rgba(0, 0, 0, .5);
+    }
 }
