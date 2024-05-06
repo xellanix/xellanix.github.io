@@ -1,0 +1,88 @@
+.popup {
+	--popup-padding: 24px;
+
+	width: 40dvw;
+	min-width: 350px;
+	max-height: 85dvh;
+	background-color: var(--secondary-background-color);
+	border-radius: 16px;
+	overflow: clip;
+	padding: var(--popup-padding);
+	padding-bottom: calc(var(--popup-padding) * 2);
+	box-sizing: border-box;
+
+	transform: scale(0);
+
+	transition: height 300ms ease-out;
+}
+.hide-all .popup {
+    animation-name: zoomIn;
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation-fill-mode: forwards;
+}
+.popup.out {
+    animation-name: zoomOut;
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation-fill-mode: forwards;
+}
+
+#popup-container {
+	overflow: auto;
+}
+
+@keyframes zoomIn {
+	0% {
+		transform: scale(0);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes zoomOut {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(0);
+	}
+}
+
+.popup .icon-landscape {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	align-self: center;
+	flex: 1 1 0;
+	color: inherit;
+	margin-left: calc(var(--section-gap-horizontal) + 40px);
+}
+.popup .icon-landscape > img {
+	height: 24px;
+}
+.popup .icon-landscape > div {
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.default-close-button {
+	width: 40px;
+	height: 40px;
+	align-self: flex-end;
+	cursor: pointer;
+}
+
+.popup-content {
+	padding-left: 13%;
+	padding-right: 13%;
+	overflow: auto;
+}
+
+.popup .icon-landscape, .popup-content h2 {
+	-webkit-user-select: none;
+	user-select: none;
+}
