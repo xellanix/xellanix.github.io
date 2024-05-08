@@ -24,7 +24,7 @@ export default function InputField(props) {
 		// value not available
 		if (!isAvailable(value)) {
 			setError(emptyError);
-			console.log(`invalid ${name}: ${value} (${emptyError})`);
+			console.error(`invalid ${name}: ${value} (${emptyError})`);
 		} else setError(patternError);
 	}
 
