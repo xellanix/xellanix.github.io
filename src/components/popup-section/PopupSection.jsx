@@ -3,6 +3,7 @@ import icon from "../../assets/icon.svg";
 
 import { useEffect, useRef, useState } from "react";
 import { IconX } from "@tabler/icons-react";
+import { dqs } from "../../shared.jsx";
 
 export default function PopupSection({ setIsPopupOpened, children }) {
 	const [defaultHeight, setDefaultHeight] = useState(null);
@@ -36,7 +37,7 @@ export default function PopupSection({ setIsPopupOpened, children }) {
 
 	function closeAnyPopup(e) {
 		e.target.disabled = true;
-		document.querySelector("#popup")?.classList.add("out");
+		dqs("#popup")?.classList.add("out");
 
 		setTimeout(() => {
 			setIsPopupOpened(false);

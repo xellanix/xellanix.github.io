@@ -41,3 +41,27 @@ export function Splitter(string = "", { type = "char" }) {
 		return [result, length];
 	} else return [[string], 1];
 }
+
+/**
+ * Same as :
+ * ```
+ * document.querySelector(selectors)
+ * ```
+ * @param {string} selectors 
+ * @returns 
+ */
+export function dqs(selectors = "") {
+	return document.querySelector(selectors);
+}
+
+/**
+ * Same as :
+ * ```
+ * document.querySelectorAll(selectors)
+ * ```
+ * @param {string} selectors 
+ * @returns 
+ */
+export function dqsa(selectors = "") {
+	return document.querySelectorAll(selectors);
+}

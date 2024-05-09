@@ -1,3 +1,4 @@
+import { dqs } from "../../shared.jsx";
 import { MakeSectionDataFromID } from "../nav-item-section/SectionCollector.jsx";
 
 export default function NavItem(props) {
@@ -6,9 +7,7 @@ export default function NavItem(props) {
 	function handleClick() {
 		//$("#hamburger-button-lottie").trigger("click");
 		if (props.isUsingHambar) {
-			document
-				.querySelector("#hamburger-button-lottie #animation")
-				.click();
+			dqs("#hamburger-button-lottie #animation").click();
 		}
 	}
 

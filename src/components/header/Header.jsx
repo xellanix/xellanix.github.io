@@ -4,6 +4,7 @@ import NavItem from "../nav-item/NavItem.jsx";
 import { GetAllSectionID } from "../nav-item-section/SectionCollector.jsx";
 import { v4 as uuidv4 } from "uuid";
 import { useLenis } from "lenis/react";
+import { dqs, dqsa } from "../../shared.jsx";
 
 import icon from "../../assets/icon.svg";
 import "./Header.css";
@@ -14,9 +15,8 @@ function changeSelectedNavItem() {
 		let lastVisibleSection = null;
 		let lastVisibleSectionTop = 0;
 
-		document
-			.querySelectorAll("main > section[data-affect-to-navbar-menu]")
-			.forEach((section) => {
+		dqsa("main > section[data-affect-to-navbar-menu]").forEach(
+			(section) => {
 				function getByDirection(topr, bottomr) {
 					const sectionHeight = bottomr - topr;
 					const minVisibleHeight =
@@ -47,7 +47,8 @@ function changeSelectedNavItem() {
 					getByDirection(rect.top, rect.bottom);
 				if (scrollDirection === 1)
 					getByDirection(rect.bottom, rect.top);
-			});
+			}
+		);
 
 		return lastVisibleSection;
 	}
@@ -57,15 +58,11 @@ function changeSelectedNavItem() {
 
 		if (lastVisibleSection) {
 			const id = lastVisibleSection.dataset.affectToNavbarMenu;
-			document
-				.querySelectorAll(`.nav-item-wrapper`)
-				.forEach((element) => {
-					element.classList.remove("active");
-				});
+			dqsa(`.nav-item-wrapper`).forEach((element) => {
+				element.classList.remove("active");
+			});
 
-			const elem = document.querySelector(
-				`.nav-item-wrapper.${id}-class`
-			);
+			const elem = dqs(`.nav-item-wrapper.${id}-class`);
 			if (elem) elem.classList.add("active");
 		}
 	}
@@ -76,9 +73,7 @@ function changeSelectedNavItem() {
 		setStyleToNavBarItem();
 
 		if (window.location.hash)
-			document
-				.querySelector(`a[href="${window.location.hash}"]`)
-				?.click();
+			dqs(`a[href="${window.location.hash}"]`)?.click();
 	});
 	window.addEventListener("scroll", function (e) {
 		const st = window.scrollY;
@@ -95,7 +90,11 @@ function changeSelectedNavItem() {
 	});
 }
 
-export default function Header({ isCollapsed, children }) {
+export default function Header({
+	isCollapsed,
+	mediaQuery = window.matchMedia("(max-width: 820px)"),
+	children,
+}) {
 	const [isSticky, setIsSticky] = useState(false);
 	const [isHambarOpened, setIsHambarOpened] = useState(false);
 	const [navItems, setNavItems] = useState(null);
@@ -109,16 +108,12 @@ export default function Header({ isCollapsed, children }) {
 
 		setNavItems(GetAllSectionID());
 
-		window
-			.matchMedia("(max-width: 820px)")
-			.addEventListener("change", (e) => {
-				if (isHambarOpened)
-					document
-						.querySelector("#hamburger-button-lottie #animation")
-						.click();
+		mediaQuery.addEventListener("change", (e) => {
+			if (isHambarOpened)
+				dqs("#hamburger-button-lottie #animation").click();
 
-				setIsHambarOpened(isHambarOpened && e.matches);
-			});
+			setIsHambarOpened(isHambarOpened && e.matches);
+		});
 
 		changeSelectedNavItem();
 
@@ -136,10 +131,10 @@ export default function Header({ isCollapsed, children }) {
 	useLenis(
 		(lenis) => {
 			if (isHambarOpened) {
-				document.querySelector("html").classList.add("no-scroll");
+				dqs("html").classList.add("no-scroll");
 				lenis.stop();
 			} else {
-				document.querySelector("html").classList.remove("no-scroll");
+				dqs("html").classList.remove("no-scroll");
 				lenis.start();
 			}
 		},
