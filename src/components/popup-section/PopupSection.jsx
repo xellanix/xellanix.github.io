@@ -37,7 +37,7 @@ export default function PopupSection({ setIsPopupOpened, children }) {
 
 	function closeAnyPopup(e) {
 		e.target.disabled = true;
-		dqs("#popup")?.classList.add("out");
+		dqs("#popup")?.addClasses("out");
 
 		setTimeout(() => {
 			setIsPopupOpened(false);

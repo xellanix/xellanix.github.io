@@ -47,8 +47,8 @@ export function Splitter(string = "", { type = "char" }) {
  * ```
  * document.querySelector(selectors)
  * ```
- * @param {string} selectors 
- * @returns 
+ * @param {string} selectors
+ * @returns
  */
 export function dqs(selectors = "") {
 	return document.querySelector(selectors);
@@ -59,9 +59,17 @@ export function dqs(selectors = "") {
  * ```
  * document.querySelectorAll(selectors)
  * ```
- * @param {string} selectors 
- * @returns 
+ * @param {string} selectors
+ * @returns
  */
 export function dqsa(selectors = "") {
 	return document.querySelectorAll(selectors);
 }
+
+Element.prototype.addClasses = function (...tokens) {
+	return this.classList.add(...tokens);
+};
+
+Element.prototype.removeClasses = function (...tokens) {
+	return this.classList.remove(...tokens);
+};

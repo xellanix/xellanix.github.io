@@ -34,11 +34,11 @@ export default class ThemeSelector extends Component {
 		const { useDarkMode } = this.state;
 
 		if (useDarkMode) {
-			document.body.classList.remove("light-theme");
-			document.body.classList.add("dark-theme");
+			document.body.removeClasses("light-theme");
+			document.body.addClasses("dark-theme");
 		} else {
-			document.body.classList.remove("dark-theme");
-			document.body.classList.add("light-theme");
+			document.body.removeClasses("dark-theme");
+			document.body.addClasses("light-theme");
 		}
 
 		if (requireToSave)

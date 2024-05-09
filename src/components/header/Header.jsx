@@ -59,11 +59,10 @@ function changeSelectedNavItem() {
 		if (lastVisibleSection) {
 			const id = lastVisibleSection.dataset.affectToNavbarMenu;
 			dqsa(`.nav-item-wrapper`).forEach((element) => {
-				element.classList.remove("active");
+				element.removeClasses("active");
 			});
 
-			const elem = dqs(`.nav-item-wrapper.${id}-class`);
-			if (elem) elem.classList.add("active");
+			dqs(`.nav-item-wrapper.${id}-class`)?.addClasses("active");
 		}
 	}
 
@@ -131,10 +130,10 @@ export default function Header({
 	useLenis(
 		(lenis) => {
 			if (isHambarOpened) {
-				dqs("html").classList.add("no-scroll");
+				dqs("html").addClasses("no-scroll");
 				lenis.stop();
 			} else {
-				dqs("html").classList.remove("no-scroll");
+				dqs("html").removeClasses("no-scroll");
 				lenis.start();
 			}
 		},
