@@ -21,8 +21,8 @@ import GetProductItems from "../products-section/ProductItems.jsx";
 import LinkSection from "../service-section/LinkSection.jsx";
 import ServiceSection from "../service-section/ServiceSection.jsx";
 import PopupSection from "../popup-section/PopupSection.jsx";
-import SignInPopup from "../popup-section/SignInPopup.jsx";
-import SignUpPopup from "../popup-section/SignUpPopup.jsx";
+import SignInPopup from "../auth/SignInPopup.jsx";
+import SignUpPopup from "../auth/SignUpPopup.jsx";
 import ThemeSelector from "../theme-selector/ThemeSelector.jsx";
 import TeamMemberItem from "../team-member/TeamMemberItem.jsx";
 import GetMembers from "../team-member/Members.jsx";
@@ -31,17 +31,25 @@ import ScrollAnimator, {
 	showFromX,
 	showFromY,
 } from "../scroll-trigger/ScrollAnimator.jsx";
-import { Splitter } from "../../shared.jsx";
+import { Splitter, dqs } from "../../shared.jsx";
+import { signOut } from "../auth/auth.js";
+import { useAuth, AuthProvider } from "../../contexts/AuthContext.jsx";
 
 export default function App() {
 	const isCollapsedMatch = window.matchMedia("(max-width: 820px)");
 	const [isCollapsed, setIsCollapsed] = useState(isCollapsedMatch.matches);
 
+	const { userLoggedIn, currentUser } = useAuth();
+
 	useEffect(() => {
 		isCollapsedMatch.addEventListener("change", (e) => {
 			setIsCollapsed(e.matches);
 		});
-	}, [isCollapsed]);
+
+		console.log(
+			`Hello ${currentUser.displayName ?? "null"} (${currentUser.email})`
+		);
+	}, []);
 
 	const [isPopupOpened, setIsPopupOpened] = useState(false);
 	const [popupItem, setPopupItem] = useState(<></>);
@@ -53,10 +61,10 @@ export default function App() {
 	useLenis(
 		(lenis) => {
 			if (isPopupOpened) {
-				document.querySelector("html").classList.add("hide-all");
+				dqs("html").addClasses("hide-all");
 				lenis.stop();
 			} else {
-				document.querySelector("html").classList.remove("hide-all");
+				dqs("html").removeClasses("hide-all");
 				lenis.start();
 			}
 		},
@@ -104,14 +112,34 @@ export default function App() {
 				}}
 			>
 				<LazyMotion features={domAnimation}>
-					<Header isCollapsed={isCollapsed}>
-						<button
-							className="button accent"
-							type="button"
-							onClick={openSignInPopup}
-						>
-							Sign in
-						</button>
+					<Header
+						isCollapsed={isCollapsed}
+						mediaQuery={isCollapsedMatch}
+					>
+						{userLoggedIn ? (
+							<button
+								className="button accent"
+								type="button"
+								onClick={async () => {
+									const result = await signOut();
+									if (result.error)
+										console.log({
+											type: "error",
+											message: result.error,
+										});
+								}}
+							>
+								Sign Out
+							</button>
+						) : (
+							<button
+								className="button accent"
+								type="button"
+								onClick={openSignInPopup}
+							>
+								Sign in
+							</button>
+						)}
 					</Header>
 
 					<main ref={container}>
