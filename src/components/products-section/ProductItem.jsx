@@ -12,7 +12,11 @@ export default function ProductItem({
 	...otherProps
 }) {
 	return (
-		<m.div className={`product-item ${additionalClass}`} {...otherProps}>
+		<m.div
+			className={`product-item ${additionalClass}`}
+			{...otherProps}
+			whileHover={{ y: -20 }}
+		>
 			<div
 				className="product-item-icon"
 				style={{

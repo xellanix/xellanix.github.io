@@ -47,3 +47,7 @@
     position: absolute;
     margin-top: calc(var(--product-item-icon-margin-top-reset) - var(--product-item-icon-margin-top));
 }
+
+.product-item h3, .product-item p {
+    cursor: default;
+}
