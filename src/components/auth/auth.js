@@ -4,6 +4,7 @@ import {
 	GoogleAuthProvider,
 	signInWithPopup,
 	updateProfile,
+	GithubAuthProvider,
 	/* sendPasswordResetEmail,
 	updatePassword,
     sendEmailVerification */
@@ -18,7 +19,7 @@ export async function signUpUser(displayName, email, pass) {
 
 		return result;
 	} catch (error) {
-		return { error: new Error(error).message };
+		return { error: new Error(error.code).message };
 	}
 }
 
@@ -27,18 +28,32 @@ export async function signInUser(email, pass) {
 		const result = await signInWithEmailAndPassword(auth, email, pass);
 		return result;
 	} catch (error) {
-		return { error: new Error(error).message };
+		return { error: new Error(error.code).message };
 	}
 }
 
 export async function signInGoogle() {
 	try {
 		const provider = new GoogleAuthProvider();
+		provider.addScope("profile");
+		provider.addScope("email");
 		const result = await signInWithPopup(auth, provider);
 
 		return result;
 	} catch (error) {
-		return { error: new Error(error).message };
+		return { error: new Error(error.code).message };
+	}
+}
+
+export async function signInGitHub() {
+	try {
+		const provider = new GithubAuthProvider();
+		provider.addScope("repo");
+		const result = await signInWithPopup(auth, provider);
+
+		return result;
+	} catch (error) {
+		return { error: new Error(error.code).message };
 	}
 }
 
@@ -47,7 +62,7 @@ export async function signOut() {
 		const result = await auth.signOut();
 		return result;
 	} catch (error) {
-		return { error: new Error(error).message };
+		return { error: new Error(error.code).message };
 	}
 }
 

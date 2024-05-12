@@ -4,12 +4,12 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import InputField from "../form/InputField.jsx";
 import InfoBox from "../info-box/InfoBox.jsx";
-import { signInUser, signInGoogle } from "./auth.js";
-import { useAuth } from "../../contexts/AuthContext.jsx";
+import { signInUser } from "./auth.js";
+import { useNavigate } from "react-router-dom";
 
-export default function SignInPopup({ switchToSignUp }) {
+export default function SignInPopup({ switchToSignUp, moveOtherMethods }) {
 	const [hasMessage, setHasMessage] = useState(null);
-	const { userLoggedIn } = useAuth();
+	const navigate = useNavigate();
 
 	const fields = [
 		{
@@ -38,30 +38,19 @@ export default function SignInPopup({ switchToSignUp }) {
 		const { usermail, userpass } = entries;
 
 		const result = await signInUser(usermail, userpass);
-		if (result.error)
-			setHasMessage({ type: "error", message: result.error });
+		if (result?.error)
+			setHasMessage({ type: "error", message: result?.error });
 		else {
 			setHasMessage(null);
+			navigate(0);
 		}
 
 		// cocolamp@xellanix.com
 		// Tes12345;
 	}
 
-	async function signInWithGoogle(e) {
-		e.preventDefault();
-
-		const result = await signInGoogle();
-		if (result.error)
-			setHasMessage({ type: "error", message: result.error });
-		else {
-			setHasMessage(null);
-		}
-	}
-
 	return (
 		<>
-			{/* userLoggedIn && <Navigate to={"/home"} replace={true} /> */}
 			<h2 className="text-align-center">Sign in to Xellanix</h2>
 			{hasMessage && (
 				<InfoBox status={hasMessage.type}>{hasMessage.message}</InfoBox>
@@ -85,9 +74,9 @@ export default function SignInPopup({ switchToSignUp }) {
 			<button
 				className="button flex-self-init"
 				type="button"
-				onClick={signInWithGoogle}
+				onClick={moveOtherMethods}
 			>
-				Sign in with Google
+				Continue with another way
 			</button>
 			<div className="separator">or</div>
 			<button
