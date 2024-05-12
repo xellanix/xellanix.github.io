@@ -5,12 +5,12 @@ import { useRef, useState } from "react";
 import InputField from "../form/InputField.jsx";
 import InfoBox from "../info-box/InfoBox.jsx";
 import { signUpUser } from "./auth.js";
-import { useAuth } from "../../contexts/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPopup({ switchToSignIn }) {
 	const confirmRef = useRef();
 	const [hasMessage, setHasMessage] = useState(null);
-	const { userLoggedIn } = useAuth();
+	const navigate = useNavigate();
 
 	const fields = [
 		{
@@ -61,16 +61,16 @@ export default function SignUpPopup({ switchToSignIn }) {
 		const { usermail, userpassconfirm, ...rest } = entries;
 
 		const result = await signUpUser(username, usermail, userpass);
-		if (result.error)
-			setHasMessage({ type: "error", message: result.error });
+		if (result?.error)
+			setHasMessage({ type: "error", message: result?.error });
 		else {
 			setHasMessage(null);
+			navigate(0);
 		}
 	}
 
 	return (
 		<>
-			{/* userLoggedIn && <Navigate to={"/home"} replace={true} /> */}
 			<h2 className="text-align-center">Sign up to Xellanix</h2>
 			{hasMessage && (
 				<InfoBox status={hasMessage.type}>{hasMessage.message}</InfoBox>
