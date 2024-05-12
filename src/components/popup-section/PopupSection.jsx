@@ -2,10 +2,15 @@ import "./popup-section.css";
 import icon from "../../assets/icon.svg";
 
 import { useEffect, useRef, useState } from "react";
-import { IconX } from "@tabler/icons-react";
+import { IconX, IconArrowLeft } from "@tabler/icons-react";
 import { dqs } from "../../shared.jsx";
 
-export default function PopupSection({ setIsPopupOpened, children }) {
+export default function PopupSection({
+	setIsPopupOpened,
+	canBack,
+	backHandle,
+	children,
+}) {
 	const [defaultHeight, setDefaultHeight] = useState(null);
 	const [totalHeight, setTotalHeight] = useState(null);
 
@@ -51,12 +56,20 @@ export default function PopupSection({ setIsPopupOpened, children }) {
 			style={{ height: totalHeight ?? "auto" }}
 		>
 			<div className="horizontal-layout">
+				{canBack && (
+					<div
+						className="default-back-button vertical-layout flex-align-middle flex-align-center"
+						onClick={backHandle}
+					>
+						<IconArrowLeft stroke={2.5} />
+					</div>
+				)}
 				<div className="icon-landscape">
 					<img src={icon} alt="Xellanix Icon" />
 					<div>Xellanix</div>
 				</div>
 				<div
-					className="default-close-button flex-align-middle flex-align-center"
+					className="default-close-button vertical-layout flex-align-middle flex-align-center"
 					onClick={closeAnyPopup}
 				>
 					<IconX stroke={2.5} />
