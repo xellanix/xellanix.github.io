@@ -237,6 +237,10 @@ input[type="text"]:invalid ~ span {
 	z-index: 101;
 }
 
+.lenis.lenis-smooth {
+	scroll-behavior: auto !important;
+}
+
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
 	#smoke-layer {
 		background-color: rgba(0, 0, 0, 0);

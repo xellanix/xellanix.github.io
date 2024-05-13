@@ -8,14 +8,19 @@ export default function NavItemSection({
 	...otherProps
 }) {
 	return (
-		<m.section
-			className={`${layout}-layout ${additionalClass}`}
+		<div
 			id={`${sectionName}-section`}
-			data-insert-to-navbar-menu
-			data-affect-to-navbar-menu={`${sectionName}-section`}
-			{...otherProps}
+			className="wrapper-only"
+			data-lenis-scroll-to-offset
 		>
-			{children}
-		</m.section>
+			<m.section
+				className={`${layout}-layout ${additionalClass}`}
+				data-insert-to-navbar-menu
+				data-affect-to-navbar-menu={`${sectionName}-section`}
+				{...otherProps}
+			>
+				{children}
+			</m.section>
+		</div>
 	);
 }

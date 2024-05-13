@@ -1,9 +1,9 @@
 import { dqsa, substringTo, toCapitalizeEachWord } from "../../shared.jsx";
 
 export function GetAllSectionID() {
-	return [...dqsa("main > section[data-insert-to-navbar-menu]")].map(
+	return [...dqsa("main section[data-insert-to-navbar-menu]")].map(
 		(element) => {
-			return element.id;
+			return element.dataset.affectToNavbarMenu;
 		}
 	);
 
