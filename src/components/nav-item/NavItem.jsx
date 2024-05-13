@@ -6,7 +6,7 @@ export default function NavItem(props) {
 	const { id, itemName } = MakeSectionDataFromID(props.sectionName);
 	const anchorRef = `#${id}-section`;
 
-	const lenis = useLenis((lenis) => {}, [anchorRef]);
+	const lenis = useLenis();
 
 	function handleClick() {
 		lenis.scrollTo(anchorRef, { lock: true, force: true });
@@ -17,11 +17,9 @@ export default function NavItem(props) {
 	}
 
 	return (
-		<div className={`nav-item-wrapper ${id}-section-class`}>
+		<div className={`nav-item-wrapper ${id}-section-class${props.isActive && " active"}`}>
 			<div className="nav-item-indicator"></div>
-			<a href={anchorRef} onClick={handleClick}>
-				{itemName}
-			</a>
+			<a onClick={handleClick}>{itemName}</a>
 		</div>
 	);
 }

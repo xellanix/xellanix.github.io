@@ -10,83 +10,37 @@ import icon from "../../assets/icon.svg";
 import "./Header.css";
 import "./nav-styles.css";
 
-function changeSelectedNavItem() {
-	function getLastVisibleSection(scrollDirection = 0) {
-		let lastVisibleSection = null;
-		let lastVisibleSectionTop = 0;
+function getAllNavItems(callback = (active = "") => {}) {
+	let actives = [];
+	const observer = new IntersectionObserver(
+		([entry]) => {
+			const id = entry.target.dataset.affectToNavbarMenu;
+			const activeIndex = actives.indexOf(id);
 
-		dqsa("main > section[data-affect-to-navbar-menu]").forEach(
-			(section) => {
-				function getByDirection(topr, bottomr) {
-					const sectionHeight = bottomr - topr;
-					const minVisibleHeight =
-						section.dataset.affectToNavbarMenu ===
-						"products-section"
-							? 0.5
-							: 0.4;
-					const visibleThreshold = sectionHeight * minVisibleHeight;
+			if (entry.isIntersecting) {
+				if (activeIndex === -1) {
+					actives.push(id);
 
-					//(topr >= 0 && bottomr - visibleThreshold <= window.innerHeight)
-					const isVisible =
-						topr + visibleThreshold <= window.innerHeight &&
-						bottomr >= visibleThreshold;
+					callback(id);
+				}
+			} else {
+				if (actives.length > 1) {
+					if (activeIndex !== -1) {
+						actives.splice(activeIndex, 1);
 
-					if (
-						isVisible &&
-						(topr >= lastVisibleSectionTop ||
-							lastVisibleSection === null)
-					) {
-						lastVisibleSectionTop = topr;
-						lastVisibleSection = section;
+						callback(actives.slice(-1)[0]);
 					}
 				}
-
-				const rect = section.getBoundingClientRect();
-				getByDirection(rect.top, rect.bottom);
-				if (scrollDirection === 0)
-					getByDirection(rect.top, rect.bottom);
-				if (scrollDirection === 1)
-					getByDirection(rect.bottom, rect.top);
 			}
-		);
+		},
+		{ threshold: 0.5 }
+	);
 
-		return lastVisibleSection;
-	}
-
-	function setStyleToNavBarItem(scrollDirection = 0) {
-		const lastVisibleSection = getLastVisibleSection(scrollDirection);
-
-		if (lastVisibleSection) {
-			const id = lastVisibleSection.dataset.affectToNavbarMenu;
-			dqsa(`.nav-item-wrapper`).forEach((element) => {
-				element.removeClasses("active");
-			});
-
-			dqs(`.nav-item-wrapper.${id}-class`)?.addClasses("active");
-		}
-	}
-
-	let lastScrollTop = 0;
-
-	window.addEventListener("load", function (e) {
-		setStyleToNavBarItem();
-
-		if (window.location.hash)
-			dqs(`a[href="${window.location.hash}"]`)?.click();
+	dqsa("main section[data-affect-to-navbar-menu]").forEach((section) => {
+		observer.observe(section);
 	});
-	window.addEventListener("scroll", function (e) {
-		const st = window.scrollY;
 
-		if (st > lastScrollTop) {
-			// Downscroll code
-			setStyleToNavBarItem(0);
-		} else {
-			// Upscroll code
-			setStyleToNavBarItem(1);
-		}
-
-		lastScrollTop = st;
-	});
+	return observer;
 }
 
 export default function Header({
@@ -97,6 +51,7 @@ export default function Header({
 	const [isSticky, setIsSticky] = useState(false);
 	const [isHambarOpened, setIsHambarOpened] = useState(false);
 	const [navItems, setNavItems] = useState(null);
+	const [activeNav, setActiveNav] = useState("");
 	const ref = useRef();
 
 	useEffect(() => {
@@ -108,23 +63,21 @@ export default function Header({
 		setNavItems(GetAllSectionID());
 
 		mediaQuery.addEventListener("change", (e) => {
-			if (isHambarOpened)
-				dqs("#hamburger-button-lottie #animation").click();
+			if (isHambarOpened) dqs("#hamburger-button-lottie #animation").click();
 
 			setIsHambarOpened(isHambarOpened && e.matches);
 		});
 
-		changeSelectedNavItem();
+		const navigationObserver = getAllNavItems((active) => setActiveNav(active));
 
 		return () => {
 			observer?.disconnect();
+			navigationObserver?.disconnect();
 		};
 	}, []);
 
 	function handleClick() {
-		if (isCollapsed) {
-			setIsHambarOpened(!isHambarOpened);
-		}
+		if (isCollapsed) setIsHambarOpened(!isHambarOpened);
 	}
 
 	useLenis(
@@ -143,11 +96,7 @@ export default function Header({
 	return (
 		<>
 			<div ref={ref} id="header-stick-watcher" data-scroll-watcher></div>
-			<header
-				className={`${isSticky ? "on-stick" : ""} ${
-					isHambarOpened ? "hambar-opened" : ""
-				}`}
-			>
+			<header className={`${isSticky && "on-stick"}${isHambarOpened && "hambar-opened"}`}>
 				<div className="icon-landscape">
 					<a href="" tabIndex="-1">
 						<img src={icon} alt="Xellanix Icon" />
@@ -158,6 +107,7 @@ export default function Header({
 					{navItems?.map((item) => (
 						<NavItem
 							key={uuidv4()}
+							isActive={item === activeNav}
 							sectionName={item}
 							isUsingHambar={isHambarOpened}
 						/>
