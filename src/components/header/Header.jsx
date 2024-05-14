@@ -96,7 +96,7 @@ export default function Header({
 	return (
 		<>
 			<div ref={ref} id="header-stick-watcher" data-scroll-watcher></div>
-			<header className={`${isSticky && "on-stick"}${isHambarOpened && "hambar-opened"}`}>
+			<header className={`${isSticky && "on-stick"}${isHambarOpened && " hambar-opened"}`}>
 				<div className="icon-landscape">
 					<a href="" tabIndex="-1">
 						<img src={icon} alt="Xellanix Icon" />
